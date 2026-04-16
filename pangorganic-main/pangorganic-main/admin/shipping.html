@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipping</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: #f1fff7;
+            margin: 0;
+        }
+
+        header {
+            background: #2ec4b6;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 28px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .preparing { background: orange; }
+        .shipping { background: blue; }
+        .delivered { background: green; }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-top: 10px;
+        }
+
+        .btn-update {
+            background: #2ec4b6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    🚚 ระบบจัดส่งสินค้า (Shipping)
+</header>
+
+<div class="container" id="shippingList"></div>
+
+<script>
+    // ข้อมูลจำลอง
+    let shipments = [
+        { id: 1, name: "White Bread", address: "กรุงเทพ", status: "preparing" },
+        { id: 2, name: "White Bread", address: "เชียงใหม่", status: "shipping" },
+        { id: 3, name: " Focaccia", address: "ภูเก็ต", status: "delivered" }
+    ];
+
+    function renderShipping() {
+        let html = "";
+
+        shipments.forEach(s => {
+            html += `
+                <div class="card">
+                    <h3>📦 ${s.name}</h3>
+                    <p>📍 ที่อยู่: ${s.address}</p>
+                    <p>
+                        🚚 สถานะ:
+                        <span class="status ${s.status}">
+                            ${getStatusText(s.status)}
+                        </span>
+                    </p>
+
+                    <button class="btn btn-update" onclick="updateStatus(${s.id})">
+                        🔄 เปลี่ยนสถานะ
+                    </button>
+                </div>
+            `;
+        });
+
+        document.getElementById("shippingList").innerHTML = html;
+    }
+
+    function getStatusText(status) {
+        if (status === "preparing") return "กำลังเตรียมของ";
+        if (status === "shipping") return "กำลังจัดส่ง";
+        if (status === "delivered") return "ส่งแล้ว";
+    }
+
+    function updateStatus(id) {
+        shipments = shipments.map(s => {
+            if (s.id === id) {
+                if (s.status === "preparing") s.status = "shipping";
+                else if (s.status === "shipping") s.status = "delivered";
+            }
+            return s;
+        });
+
+        renderShipping();
+    }
+
+    renderShipping();
+</script>
+
+</body>
+</html>

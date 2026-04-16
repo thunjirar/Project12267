@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="cart.js"></script>
+</head>
+<body>
+    <nav>
+        <img class="logo" src="images/logo.png" alt="Logo">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="About.html">About</a>
+            <a href="Menu.html">Menu</a>
+            <a href="Contact.html">Contact</a>
+            <a href="Custom.html">Custom</a>
+            <a href="Team.html">Team</a>
+            <div class="icon-login">
+                <a href="login.html"><img src="images/user.png" alt="Icon"></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="Custom-Bread-text">
+        <h1>Custom Bread</h1>
+    </div>
+
+    <section class="custom-form-section">
+        <div class="custom-form-container">
+            <h2 class="custom-form-title">Select your option by clicking the circle</h2>
+            
+            <form id="custom-bread-form" class="custom-bread-form">
+                <div class="form-group">
+                    <div class="form-group-header">
+                        <h3>Choose Your Base</h3>
+                        <span class="required-badge">Required</span>
+                    </div>
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="base" value="banana" data-price="170">
+                            <span class="radio-text">Banana Bread</span>
+                            <span class="radio-price">(+170 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="base" value="chocolate" data-price="150" checked>
+                            <span class="radio-text">Chocolate Bread</span>
+                            <span class="radio-price">(+150 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="base" value="lemon" data-price="150">
+                            <span class="radio-text">Lemon Loaf</span>
+                            <span class="radio-price">(+150 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="base" value="wheat" data-price="150">
+                            <span class="radio-text">Whole Wheat</span>
+                            <span class="radio-price">(+150 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="base" value="dark_chocolate" data-price="180">
+                            <span class="radio-text">Dark Chocolate</span>
+                            <span class="radio-price">(+180 THB)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group-header">
+                        <h3>Size</h3>
+                        <span class="required-badge">Required</span>
+                    </div>
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="size" value="small" data-price="0">
+                            <span class="radio-text">Small (1-2 servings)</span>
+                            <span class="radio-price">(+0 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="size" value="medium" data-price="20">
+                            <span class="radio-text">Medium (3-4 servings)</span>
+                            <span class="radio-price">(+20 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="size" value="large" data-price="40" checked>
+                            <span class="radio-text">Large (5-6 servings)</span>
+                            <span class="radio-price">(+40 THB)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group-header">
+                        <h3>Toppings / Add-ons</h3>
+                        <span class="optional-badge">Optional</span>
+                    </div>
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="topping" value="chocolate_chips" data-price="40" checked>
+                            <span class="radio-text">Chocolate Chips</span>
+                            <span class="radio-price">(+40 THB)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="topping" value="almond" data-price="40">
+                            <span class="radio-text">Almond / Nuts</span>
+                            <span class="radio-price">(+40 THB)</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <div class="custom-footer">
+                <div class="total-box">
+                    <span class="total-label">Total:</span>
+                    <span id="total-price" class="total-price">230 THB</span>
+                </div>
+                <button type="button" class="add-to-cart-btn-custom">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calculateTotal() {
+            let total = 0;
+            const base = document.querySelector('input[name="base"]:checked');
+            if (base) total += parseInt(base.dataset.price) || 0;
+            const size = document.querySelector('input[name="size"]:checked');
+            if (size) total += parseInt(size.dataset.price) || 0;
+            const topping = document.querySelector('input[name="topping"]:checked');
+            if (topping) total += parseInt(topping.dataset.price) || 0;
+            document.getElementById('total-price').textContent = total + ' THB';
+        }
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', calculateTotal);
+        });
+        calculateTotal();
+    </script>
+
+    <div class="floating-cart-menu">
+        <img src="images/custom.png" alt="Cart">
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <img src="images/logo.png" alt="Pang Organic" class="footer-logo">
+                <p>Experience the difference of truly organic bread, made with care from the selection of seeds to the day it comes out of the oven.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h3>our store</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="About.html">About</a></li>
+                    <li><a href="Menu.html">Menu</a></li>
+                    <li><a href="Contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3>Get In Touch</h3>
+                <ul>
+                    <li><img src="images/location.png" alt="Location"> <span>Bangkok<br>123 Bakery Street, Sukhumvit</span></li>
+                    <li><img src="images/gmail.png" alt="Email"> <span>Pangorganic123@gmail.com</span></li>
+                    <li><img src="images/ig.png" alt="Instagram"> <span>pang_organic</span></li>
+                    <li><img src="images/phone.png" alt="Phone"> <span>123-456-7895</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <img src="images/logo.png" alt="Pang Organic" style="width: 30px;">
+                <span>pang organic</span>
+            </div>
+            <p>&copy; 2026 Pang Organic Bakery. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
