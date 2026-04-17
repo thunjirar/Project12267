@@ -1,0 +1,180 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* สไตล์เฉพาะหน้า Orders */
+    .orders-section { padding: 50px 5%; background-color: #fdfaf7; min-height: 80vh; }
+    .orders-container { max-width: 1000px; margin: 0 auto; }
+    
+    .order-card { 
+        background: white; 
+        padding: 30px; 
+        margin-bottom: 25px; 
+        border-radius: 20px; 
+        box-shadow: 0 10px 25px rgba(107, 68, 35, 0.05); 
+        border-top: 5px solid #6b4423;
+    }
+
+    .order-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding-bottom: 15px; 
+        border-bottom: 1px dashed #eee;
+        margin-bottom: 15px;
+    }
+
+    .order-id { font-weight: bold; color: #6b4423; font-size: 1.2rem; }
+    .order-date { color: #888; font-size: 0.9rem; }
+
+    .order-details { margin-bottom: 20px; }
+    .order-item { 
+        display: flex; 
+        justify-content: space-between; 
+        padding: 8px 0; 
+        color: #555;
+    }
+
+    .order-total { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        padding-top: 15px; 
+        border-top: 2px solid #fdfaf7;
+        font-weight: bold; 
+        font-size: 1.3rem; 
+        color: #6b4423; 
+    }
+
+    .status-badge {
+        padding: 6px 15px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+    .status-pending { background: #fff3e0; color: #ef6c00; }
+    .status-completed { background: #e8f5e9; color: #2e7d32; }
+
+    .btn-action {
+        background: #6b4423;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-family: 'Kanit', sans-serif;
+        transition: 0.3s;
+    }
+    .btn-action:hover { background: #56361c; }
+
+    .empty-state {
+        text-align: center;
+        padding: 100px 20px;
+        background: white;
+        border-radius: 20px;
+        color: #888;
+    }
+
+    @media (max-width: 600px) {
+        .order-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+</style>
+
+<div style="text-align: center; padding: 40px 0;">
+    <h1 style="font-size: 3rem; color: #6b4423; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">Order History</h1>
+    <p style="color: #888;">ติดตามและจัดการรายการสั่งซื้อขนมปังออร์แกนิกของคุณ</p>
+</div>
+
+<section class="orders-section">
+    <div class="orders-container" id="orders-list">
+        </div>
+</section>
+
+<script>
+    // ข้อมูลออเดอร์จำลอง (ในระบบจริงจะดึงจาก Database)
+    let mockOrders = [
+        {
+            id: "ORD-2026-001",
+            date: "17 เมษายน 2026 | 14:30",
+            items: [
+                { name: "Classic American loaf", qty: 2, price: 330 },
+                { name: "Custom: Banana Bread (Large)", qty: 1, price: 210 }
+            ],
+            total: 540,
+            status: "pending"
+        },
+        {
+            id: "ORD-2026-002",
+            date: "16 เมษายน 2026 | 09:15",
+            items: [
+                { name: "Sourdough", qty: 1, price: 220 }
+            ],
+            total: 220,
+            status: "completed"
+        }
+    ];
+
+    function renderOrders() {
+        const listContainer = document.getElementById('orders-list');
+        
+        if (mockOrders.length === 0) {
+            listContainer.innerHTML = `
+                <div class="empty-state">
+                    <img src="{% static 'shop/images/search.png' %}" style="width: 80px; opacity: 0.2; margin-bottom: 20px;">
+                    <h3>ยังไม่มีรายการสั่งซื้อใหม่ในขณะนี้</h3>
+                    <p>เมื่อลูกค้าสั่งซื้อขนมปัง รายการจะมาปรากฏที่นี่</p>
+                    <br>
+                    <a href="{% url 'index' %}" style="color: #6b4423; font-weight: bold;">กลับไปหน้าหลัก</a>
+                </div>
+            `;
+            return;
+        }
+
+        let html = "";
+        mockOrders.forEach(order => {
+            const statusText = order.status === "pending" ? "⏳ รอดำเนินการ" : "✅ สำเร็จแล้ว";
+            const statusClass = order.status === "pending" ? "status-pending" : "status-completed";
+
+            html += `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-id">เลขที่คำสั่งซื้อ: ${order.id}</span>
+                            <div class="order-date">${order.date}</div>
+                        </div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    
+                    <div class="order-details">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <span>${item.name} x ${item.qty}</span>
+                                <span>${item.price} THB</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="order-total">
+                        <span>ยอดรวมสุทธิ</span>
+                        <span>${order.total} THB</span>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: right;">
+                        <button class="btn-action" onclick="viewInvoice('${order.id}')">ดูรายละเอียด / ใบเสร็จ</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    }
+
+    function viewInvoice(id) {
+        alert("กำลังเปิดดูรายละเอียดของออเดอร์: " + id);
+    }
+
+    // เรียกทำงาน
+    renderOrders();
+</script>
+{% endblock %}

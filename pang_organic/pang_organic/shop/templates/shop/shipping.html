@@ -1,0 +1,137 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* สไตล์เฉพาะหน้า Shipping */
+    .shipping-section { padding: 50px 5%; background-color: #fdfaf7; min-height: 80vh; }
+    .shipping-container { max-width: 900px; margin: 0 auto; }
+    
+    .shipping-card { 
+        background: white; 
+        padding: 25px; 
+        margin-bottom: 20px; 
+        border-radius: 20px; 
+        box-shadow: 0 8px 20px rgba(107, 68, 35, 0.05); 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 6px solid #6b4423;
+        transition: 0.3s;
+    }
+
+    .shipping-card:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(107, 68, 35, 0.1); }
+
+    .info-group h3 { margin: 0 0 10px 0; color: #6b4423; font-size: 1.3rem; }
+    .info-group p { margin: 5px 0; color: #666; font-size: 0.95rem; }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    /* สีสถานะ */
+    .preparing { background: #fff3e0; color: #ef6c00; } /* ส้มอ่อน */
+    .shipping { background: #e3f2fd; color: #1976d2; }  /* ฟ้าอ่อน */
+    .delivered { background: #e8f5e9; color: #2e7d32; } /* เขียวอ่อน */
+
+    .btn-update {
+        background: #6b4423;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-family: 'Kanit', sans-serif;
+        font-size: 0.9rem;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-update:hover { background: #56361c; }
+    .btn-update:disabled { background: #ccc; cursor: not-allowed; }
+
+    @media (max-width: 650px) {
+        .shipping-card { flex-direction: column; align-items: flex-start; gap: 20px; }
+        .btn-update { width: 100%; justify-content: center; }
+    }
+</style>
+
+<div style="text-align: center; padding: 40px 0;">
+    <h1 style="font-size: 3rem; color: #6b4423; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">Delivery Tracking</h1>
+    <p style="color: #888;">ติดตามสถานะการจัดส่งขนมปังจากเตาถึงมือคุณ</p>
+</div>
+
+<section class="shipping-section">
+    <div class="shipping-container" id="shippingList">
+        </div>
+</section>
+
+<script>
+    // ข้อมูลจำลอง (Mock Data)
+    let shipments = [
+        { id: 1, name: "Classic American loaf", address: "123 สุขุมวิท, กรุงเทพฯ", status: "preparing" },
+        { id: 2, name: "Olive Bread & Focaccia", address: "45/1 มิมมานฯ, เชียงใหม่", status: "shipping" },
+        { id: 3, name: "Sourdough", address: "99 ราไวย์, ภูเก็ต", status: "delivered" }
+    ];
+
+    function renderShipping() {
+        let html = "";
+
+        shipments.forEach(s => {
+            const isDelivered = s.status === "delivered";
+            html += `
+                <div class="shipping-card">
+                    <div class="info-group">
+                        <span class="status-badge ${s.status}">
+                            ${getStatusIcon(s.status)} ${getStatusText(s.status)}
+                        </span>
+                        <h3>📦 ${s.name}</h3>
+                        <p>📍 <strong>ที่อยู่:</strong> ${s.address}</p>
+                        <p>🆔 <strong>Tracking No:</strong> PG-${1000 + s.id}TH</p>
+                    </div>
+
+                    <button class="btn-update" onclick="updateStatus(${s.id})" ${isDelivered ? 'disabled' : ''}>
+                        ${isDelivered ? '✅ จัดส่งสำเร็จ' : '🔄 อัปเดตสถานะ'}
+                    </button>
+                </div>
+            `;
+        });
+
+        document.getElementById("shippingList").innerHTML = html;
+    }
+
+    function getStatusText(status) {
+        if (status === "preparing") return "กำลังเตรียมสินค้า";
+        if (status === "shipping") return "อยู่ระหว่างจัดส่ง";
+        if (status === "delivered") return "จัดส่งเรียบร้อยแล้ว";
+    }
+
+    function getStatusIcon(status) {
+        if (status === "preparing") return "👨‍🍳";
+        if (status === "shipping") return "🚚";
+        if (status === "delivered") return "🏠";
+    }
+
+    function updateStatus(id) {
+        shipments = shipments.map(s => {
+            if (s.id === id) {
+                if (s.status === "preparing") s.status = "shipping";
+                else if (s.status === "shipping") s.status = "delivered";
+            }
+            return s;
+        });
+
+        renderShipping();
+    }
+
+    // เริ่มทำงานครั้งแรก
+    renderShipping();
+</script>
+{% endblock %}

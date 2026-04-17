@@ -1,0 +1,178 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* สไตล์เฉพาะหน้า Register */
+    .register-page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 20px;
+        background-color: #fdfaf7;
+        min-height: 80vh;
+    }
+
+    .register-card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(107, 68, 35, 0.1);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .register-title {
+        color: #6b4423;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    .register-subtitle {
+        color: #888;
+        margin-bottom: 30px;
+    }
+
+    .register-form {
+        text-align: left;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #6b4423;
+        font-weight: 500;
+    }
+
+    .required { color: #d9534f; }
+
+    .name-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: 0.3s;
+        font-family: 'Kanit', sans-serif;
+    }
+
+    input:focus {
+        border-color: #6b4423;
+        outline: none;
+        box-shadow: 0 0 5px rgba(107, 68, 35, 0.2);
+    }
+
+    .register-btn {
+        width: 100%;
+        padding: 14px;
+        background-color: #6b4423;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .register-btn:hover {
+        background-color: #56361c;
+        transform: translateY(-2px);
+    }
+
+    .register-footer {
+        margin-top: 25px;
+        font-size: 0.9rem;
+    }
+
+    .login-link {
+        color: #6b4423;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .back-link {
+        display: block;
+        margin-top: 15px;
+        color: #aaa;
+        text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+        .name-inputs { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="register-page-wrapper">
+    <div class="register-card">
+        <h1 class="register-title">PangOrganic</h1>
+        <p class="register-subtitle">สร้างบัญชีใหม่เพื่อรับสิทธิพิเศษและสั่งซื้อ</p>
+        
+        <form id="registerForm" action="#" method="POST" class="register-form">
+            {% csrf_token %} <div class="input-group">
+                <label>ชื่อ-นามสกุล <span class="required">*</span></label>
+                <div class="name-inputs">
+                    <input type="text" name="firstname" placeholder="ชื่อ" required>
+                    <input type="text" name="lastname" placeholder="นามสกุล" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>ชื่อที่ใช้แสดง (Display Name) <span class="required">*</span></label>
+                <input type="text" name="displayname" placeholder="เช่น คุณปังปัง" required>
+            </div>
+            
+            <div class="input-group">
+                <label>อีเมลของคุณ <span class="required">*</span></label>
+                <input type="email" name="email" placeholder="example@gmail.com" required>
+            </div>
+            
+            <div class="input-group">
+                <label>สร้างรหัสผ่านใหม่ <span class="required">*</span></label>
+                <input type="password" id="password" name="password" placeholder="อย่างน้อย 8 ตัวอักษร" required>
+            </div>
+
+            <div class="input-group">
+                <label>ยืนยันรหัสผ่านอีกครั้ง <span class="required">*</span></label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="กรอกรหัสผ่านเดิมอีกครั้ง" required>
+            </div>
+            
+            <button type="submit" class="register-btn">สมัครสมาชิก</button>
+        </form>
+        
+        <div class="register-footer">
+            <p>มีบัญชีอยู่แล้ว? <a href="{% url 'login' %}" class="login-link">เข้าสู่ระบบที่นี่</a></p>
+            <a href="{% url 'index' %}" class="back-link">← กลับหน้าแรก</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const confirm = document.getElementById('confirm_password').value;
+
+        if (password !== confirm) {
+            e.preventDefault();
+            alert('❌ รหัสผ่านทั้งสองช่องไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง');
+        } else {
+            // ในที่นี้เป็นตัวอย่างแจ้งเตือน
+            alert('🎉 สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ครอบครัว Pang Organic');
+            //window.location.href = "{% url 'login' %}";
+        }
+    });
+</script>
+{% endblock %}
